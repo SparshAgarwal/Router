@@ -1,0 +1,85 @@
+[address:port]
+[01:0]
+[01:0][02:1]
+[01:0][02:1][03:2]
+[01:0][02:1][03:2][04:0]		
+[02:1][03:2][04:0][05:1][01:0:1]	
+# Add five entries
+# Change port of entry 01 to eth1 and test to see if the entry is correct
+[02:1][03:2][04:0][05:1][01:1]
+[02:1][03:2][04:0][05:1][01:1]
+# Send packet to all destination 01-05 once to refresh the timeout
+# Delay for 7s, entry should still be in the table
+[02:1][03:2][04:0][05:1][01:1]
+# Delay for 10s, entry should not be there anymore
+
+Expected Scenario
+packet 01, ff
+in 0, out 1,2
+
+packet 02, ff
+in 1, out 0,2
+
+packet 03, ff
+in 2, out 0,1
+
+packet 04, switch
+in 0, timeout 1
+
+packet 05, 01
+in 1, out 0
+
+packet 01, switch
+in 1, timeout 1
+
+packet 05, 01
+in 1, out 1
+
+packet 06, 01
+in 0, out 1
+
+packet 06, 02
+in 0, out 1
+
+packet 06, 03
+in 0, out 2
+
+packet 06, 04
+in 0, out 0
+
+packet 06, 05
+in 0, out 1
+
+timeout 7
+
+packet 06, 01
+in 0, out 1
+
+packet 06, 02
+in 0, out 1
+
+packet 06, 03
+in 0, out 2
+
+packet 06, 04
+in 0, out 0
+
+packet 06, 05
+in 0, out 1
+
+timeout 10
+
+packet 06, 01
+in 0, out 1,2
+
+packet 06, 02
+in 0, out 1,2
+
+packet 06, 03
+in 0, out 1,2
+
+packet 06, 04
+in 0, out 1,2
+
+packet 06, 05
+in 0, out 1,2

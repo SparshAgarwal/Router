@@ -1,0 +1,41 @@
+[address:port]
+[01:0]
+[01:0][02:1]
+[01:0][02:1][03:2]
+[01:0][02:1][03:2][04:0]		# Make packet 01 the most recently used packet
+[02:1][03:2][04:0][05:1][01:0]	# Change the port of packet 01 from eth0 to eth1
+[02:1][03:2][04:0][05:1][01:1]  # This is to test if receiving a packet with 01 as the source will change only the port without affecting its position in the table
+[04:0][05:1][01:1][06:2][03:2]	# Then, push packet 01 to the least recently used and check if it is dropped from the table correctly
+[01:1][06:2][03:2][07:0][05:1]	# By receiving a packet (source:08, destination:01)
+[06:2][03:2][07:0][05:1][08:0]  # the entry 08 should be added and the entry 01 should be dropped, and the switch should broadcast the packet because 01 is not in the entry
+
+# At the same time, we also tested if the switch send packets out to all ports except for the source
+# If the switch send the packet out the correct port
+
+Expected Scenario
+packet 01, ff
+in 0, out 1,2
+
+packet 02, ff
+in 1, out 0,2
+
+packet 03, ff
+in 2, out 0,1
+
+packet 04, switch
+in 0, timeout 1
+
+packet 05, 01
+in 1, out 0
+
+packet 01, switch
+in 1, timeout 1
+
+packet 06, 03
+in 2, out 2
+
+packet 07, 05
+in 0, out 1
+
+packet 08, 01
+in 0, out 1,2

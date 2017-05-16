@@ -1,0 +1,6 @@
+Total TX time (in seconds): 25.39143133163452
+Number of reTX: 31
+Number of coarse TOs: 17
+Throughput (Bps): 126111.99259218236
+Goodput (Bps): 96268.69663525371
+[39m[49m[0m
